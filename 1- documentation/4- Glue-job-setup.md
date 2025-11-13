@@ -29,7 +29,7 @@ We use Glue for ETL because:
 
 All Glue jobs live in:
 
-    etl-scripts/
+    "3- etl-scripts/"
 
 ---
 
