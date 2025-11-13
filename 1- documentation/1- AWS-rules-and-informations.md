@@ -5,7 +5,6 @@
 
 ### 📊 1- AWS-rules-and-informations.md
 # AWS Rules and Informations  
-_us-trade-tariff-analysis_
 
 This document summarizes the **non-negotiable rules**, **initial setup decisions**, and **high-level service overview** for the `us-trade-tariff-analysis` project.
 
