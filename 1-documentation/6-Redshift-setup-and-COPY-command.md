@@ -48,7 +48,7 @@ We can give prefixes such as stg_trades,stg_hts_category,fact_trades,dim_hts_cat
 All data is loaded directly from Parquet files created by Glue.
 
 **Scripts**
-"Get-data-from-data-catalog.sql"
+"create_staging_tables.sql"
 
 -------------------------------------------------------------------------------
 

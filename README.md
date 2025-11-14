@@ -7,7 +7,7 @@
 
 ---
 
-## 🧭 Overview  
+##1 🧭 Overview  
 
 This project investigates whether the **Trump-era tariffs** imposed on U.S. trade partners were economically justified or politically biased.  
 Using official datasets from the **U.S. International Trade Commission (USITC)** for **2022–2024**, we measure trade balances between the United States and major countries, comparing actual trade data with applied tariff rates.
@@ -23,7 +23,7 @@ Contextual enrichment (GDP, population, distance, COVID impact, migration) ensur
 
 ---
 
-## 🎯 Objectives  
+##2 🎯 Objectives  
 
 | Phase | Goal |
 |-------|------|
@@ -34,7 +34,7 @@ Contextual enrichment (GDP, population, distance, COVID impact, migration) ensur
 
 ---
 
-## 🧩 Data Architecture  
+##3 🧩 Data Architecture  
 
 **AWS Services Used**
 - Amazon S3 – Raw and processed data lake ('usa-customs-data-raw-salih-sezen')
@@ -46,7 +46,7 @@ Contextual enrichment (GDP, population, distance, COVID impact, migration) ensur
 
 ---
 
-## 🧮 Data Engineering Workflow  
+##4 🧮 Data Engineering Workflow  
 
 1. **Data Acquisition**
    - Source: [USITC Trade Data](https://dataweb.usitc.gov/trade/search/GenImp/HTS)
@@ -81,7 +81,7 @@ Contextual enrichment (GDP, population, distance, COVID impact, migration) ensur
 
 ---
 
-## 🧠 Analytical Focus  
+##5 🧠 Analytical Focus  
 
 - **Policy Validity:** Were tariffs aligned with measurable deficits?  
 - **Economic Fairness:** Which nations were over-tariffed despite U.S. surpluses?  
@@ -91,7 +91,7 @@ Contextual enrichment (GDP, population, distance, COVID impact, migration) ensur
 
 ---
 
-## 🧰 Tech Stack  
+##6 🧰 Tech Stack  
 
 | Layer | Technology |
 |-------|-------------|
@@ -105,16 +105,19 @@ Contextual enrichment (GDP, population, distance, COVID impact, migration) ensur
 
 ---
 
-## 📁 Repository Structure  
+##7 📁 Repository Structure  
 
 us-trade-tariff-analysis/
 ├── README.md
 ├── 1- documentation/
-│ ├── s3-upload-guide.md
-│ ├── glue-job-setup.md
-│ ├── redshift-setup.md
-│ ├── quick-sight-dashboard-plan.md
-│ └── project_report.md
+│ ├── 1-AWS-rules-and-informations.md
+│ ├── 2-IAM-roles-and-policies-setup.md
+│ ├── 3-S3-upload-guide.md
+│ ├── 4-Glue-job-setup.md
+│ ├── 5-Glue-crawler-setup.md
+│ ├── 6-Redshift-setup-and-COPY-command.md
+│ ├── 7-Data-warehousing-and-data-modelling.md
+│ └── 8-PowerBI-QuickSight-connection-setup.md
 ├── 2- data-sources/USA Customs/
 │ ├── Dataset1-2.jpg
 │ ├── Definitions/
@@ -124,28 +127,45 @@ us-trade-tariff-analysis/
 │ ├── Imports/
 │ │ └── DataWeb-Query-Export (6-10).xlsx
 │ └── additional-datasources/
-│ │ └── final_dim_country_clean.xlsx
+│ │ ├── dim_hts_category_short_preserve.xlsx
+│ │ └── dim_country_clean.xlsx
 ├── 3- etl-scripts/
 │ ├── rename_s3_files.py
 │ ├── process_exports.py
 │ ├── process_imports.py
 │ ├── create_dim_hts_category.py
-│ ├── integrate_country_data.py
-│ └── integrate_tariff_data.py
+│ ├── (future)integrate_country_data.py
+│ └── (future)integrate_tariff_data.py
 ├── 4- data-warehousing-and-data-modeling/
-│ ├── redshift_schema.sql
-│ └── data_model_diagram.png
-├── 5- analysis/
-│ └── 
-└── assets/
-├── diagrams/
-├── screenshots/
-└── dashboards/
-
+│ ├── create_staging_tables.sql
+│ ├── create_fact_and_dim_tables.sql
+│ ├── power_bi_star_data_model.jpg
+│ ├── fact_trades.jpg
+│ ├── dim_country.jpg
+│ ├── dim_date.jpg
+│ ├── dim_direction.jpg
+│ └── dim_hts_category.jpg
+├── 5-business-intelligence-and-analysis/
+│ └── power_bi_star_data_model.jpg
+└── 6-screen-shots
+  ├── 1- S3-Region-Bucket-Folders.jpg
+  ├── 2- IAM-roles-and-policies-setup.jpg
+  ├── 3- S3-upload-data-sources.jpg
+  ├── 4.1- Rename-files.jpg
+  ├── 4.2- process_exports_excel.py.jpg
+  ├── 4.3- process_imports_excel.py.jpg
+  ├── 4.4- create_dim_hts_category.jpg
+  ├── 5.1- export-import-crawler.jpg
+  ├── 5.2- dim-hts-category-crawler.jpg
+  ├── 8.1- Redshift-work-group-info.jpg
+  ├── 8.2- QuickSight-connection.jpg
+  ├── 8.3- PowerBI-connection.jpg
+  ├── 8.4- PowerBI-connection-Redshift-dwh-tables.jpg
+  └── 8.5- PowerBI-connection-Redshift-loading.jpg
 
 ---
 
-## 🧾 Future Enhancements  
+##8 🧾 Future Enhancements  
 
 - Incremental ETL automation using AWS Glue Workflows  
 - ML-based anomaly detection for trade irregularities  
@@ -154,15 +174,27 @@ us-trade-tariff-analysis/
 
 ---
 
-## 🏁 Result Summary *(Template)*  
+##9 🏁 Result Summary *(Template and Draft)*  
+---
+# Note:
+**The findings below are illustrative placeholders included for demonstration purposes.
+**Final and authoritative results will be obtained after Part 2: Business Intelligence Dashboards are fully developed and the complete analytical evaluation is performed.**
+**This section is currently in a template draft state.**
+---
 
-Preliminary findings suggest that **post-COVID global trade instability significantly altered tariff relevance**:
+Preliminary findings indicate that **post-COVID global trade instability has significantly altered the importance of customs duties**:
 
+- The most imported product group was Nuclear Reactors, Boilers, Machinery, and Mechanical Equipment, at $521 billion, while the most exported product group was Mineral Fuels, Oils, and Products, at $319 billion.  
+- At the same time, we found that the tariff rates applied by the US remain excessively low for many countries, considering the US trade deficit with those countries.
 - Global import/export contraction ≈ 20% overall.  
 - Manufacturing relocation from China to India/ASEAN shifted ~12–15% of U.S. imports.  
 - European market instability caused ~25% trade volatility, cutting U.S. export growth by ~20%.  
-- Tariffs remained largely static, out of sync with real-world trade data.  
-- QuickSight visualizations highlight regions (e.g., Turkey, U.K., South Korea) where U.S. surpluses coexist with high tariffs.
+- Significant deviations were found in the fair calculation of tariffs, showing inconsistencies with real-world trade data.
+- Power BI visualizations highlight regions where the US has a surplus (e.g., Turkey, United Kingdom, South Korea) and the high tariffs in these regions.
+- Political instability in countries affects credit ratings ...
+- Countries with a GDP per capita above $10,000 ...
+- In countries with a population under 10 million and a birth rate below 10, ...
+...
 
 These placeholders will be replaced by **empirical Redshift results** and **BI-derived policy metrics** once final dashboards are deployed.
 

@@ -64,7 +64,7 @@ trade_value is the FAS Value(Exports) and General Customs Value(Imports) from US
 #4. Loading Data from Staging Tables
 
 **Scripts**
-"Data-warehousing-and-data-modelling.sql"
+"create_fact_and_dim_tables.sql"
 
 
 -------------------------------------------------------------------------------
