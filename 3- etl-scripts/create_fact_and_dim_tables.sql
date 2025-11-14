@@ -1,4 +1,4 @@
-
+-- linguist-detectable=true
 -- 1) STAGING CLEAN VIEW
 CREATE OR REPLACE VIEW public.vw_stg_trades_clean AS
 SELECT

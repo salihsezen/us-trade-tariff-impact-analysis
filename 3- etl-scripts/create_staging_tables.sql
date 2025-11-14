@@ -1,3 +1,4 @@
+-- linguist-detectable=true
 --Script 1 Create stg_trades table
 --DROP TABLE IF EXISTS COPY stg_trades;
 CREATE TABLE IF NOT EXISTS dev.public.stg_trades (
