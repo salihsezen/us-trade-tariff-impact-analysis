@@ -1,5 +1,5 @@
 ```mermaid
-flowchart TB
+flowchart LR
 
 %% ---------- COLOR CLASSES ----------
 classDef s3 fill:#f7d7a4,stroke:#c48c00,stroke-width:1px,color:#000;
@@ -9,8 +9,9 @@ classDef bi fill:#c8e8ff,stroke:#3e8ed0,stroke-width:1px,color:#000;
 classDef iam fill:#e6e6e6,stroke:#8d8d8d,stroke-width:1px,color:#000;
 classDef local fill:#fff3c9,stroke:#cc9a00,stroke-width:1px,color:#000;
 
+
 %% ===================================================================
-%%  TOP ROW  → Local → S3 Raw → Lambda → Glue ETL
+%%                           TOP ROW (INGESTION)
 %% ===================================================================
 
 subgraph LOCAL["Local Machine"]
@@ -19,23 +20,23 @@ subgraph LOCAL["Local Machine"]
 end
 class LOCAL,L1,L2 local;
 
-subgraph S3RAW["S3 Raw Layer"]
-  Rdef["Definitions Folder"]
-  Rimp["Imports Folder"]
-  Rexp["Exports Folder"]
+subgraph RAW["S3 Raw Layer"]
+  R1["Definitions Folder"]
+  R2["Imports Folder"]
+  R3["Exports Folder"]
 end
-class Rdef,Rimp,Rexp s3;
+class RAW,R1,R2,R3 s3;
 
-L1 --> Rexp
-L1 --> Rimp
-L2 --> Rdef
+L1 --> R2
+L1 --> R3
+L2 --> R1
 
 Lambda1["Lambda Rename Script"]
 class Lambda1 glue;
 
-Rdef --> Lambda1
-Lambda1 --> Rexp
-Lambda1 --> Rimp
+R1 --> Lambda1
+Lambda1 --> R2
+Lambda1 --> R3
 
 subgraph GLUE["AWS Glue ETL"]
   G1["Process Imports (Excel→Parquet)"]
@@ -44,15 +45,16 @@ subgraph GLUE["AWS Glue ETL"]
 end
 class G1,G2,G3 glue;
 
-Rimp --> G1
-Rexp --> G2
-Rdef --> G3
+R2 --> G1
+R3 --> G2
+R1 --> G3
+
 
 %% ===================================================================
-%%  BOTTOM ROW  → Processed → Crawlers → Redshift → BI
+%%                        BOTTOM ROW (DWH + BI)
 %% ===================================================================
 
-subgraph S3PROC["S3 Processed (Parquet)"]
+subgraph PROC["S3 Processed (Parquet)"]
   P1["Imports Parquet"]
   P2["Exports Parquet"]
   P3["HTS Category Parquet"]
@@ -63,7 +65,8 @@ G1 --> P1
 G2 --> P2
 G3 --> P3
 
-subgraph CRAWLERS["Glue Crawlers + Catalog"]
+
+subgraph CRAWLERS["Glue Crawlers + Data Catalog"]
   C1["Trades Crawler"]
   C2["HTS Category Crawler"]
   CAT["Glue Data Catalog"]
@@ -74,18 +77,16 @@ P1 --> C1 --> CAT
 P2 --> C1
 P3 --> C2 --> CAT
 
-%% ===================================================================
-%%  REDSHIFT
-%% ===================================================================
 
-subgraph STG["Redshift STAGING"]
-  S1["stg_trades"]
-  S2["stg_hts_category"]
+subgraph STAGING["Redshift STAGING"]
+  ST1["stg_trades"]
+  ST2["stg_hts_category"]
 end
-class S1,S2 redshift;
+class ST1,ST2 redshift;
 
-CAT --> S1
-CAT --> S2
+CAT --> ST1
+CAT --> ST2
+
 
 subgraph CORE["Redshift DIM & FACT"]
   D1["dim_country"]
@@ -96,14 +97,10 @@ subgraph CORE["Redshift DIM & FACT"]
 end
 class D1,D2,D3,D4,F1 redshift;
 
-%% staging → dims/facts
-S1 --> F1
-S1 --> D1
-S2 --> D2
+ST1 --> F1
+ST1 --> D1
+ST2 --> D2
 
-%% ===================================================================
-%%  BI LAYER
-%% ===================================================================
 
 subgraph BI["Analytics Layer"]
   Q1["QuickSight Dashboards"]
@@ -122,4 +119,23 @@ D3 --> Q1
 D3 --> PB1
 D4 --> Q1
 D4 --> PB1
+
+
+%% ===================================================================
+%%                        IAM ROLES (RIGHT SIDE)
+%% ===================================================================
+
+subgraph IAM["IAM Roles"]
+  IAM1["Glue Role"]
+  IAM2["Redshift Role"]
+  IAM3["QuickSight Role"]
+end
+class IAM1,IAM2,IAM3 iam;
+
+IAM1 -.-> GLUE
+IAM1 -.-> CRAWLERS
+IAM2 -.-> CORE
+IAM2 -.-> STAGING
+IAM3 -.-> Q1
+
 ```
