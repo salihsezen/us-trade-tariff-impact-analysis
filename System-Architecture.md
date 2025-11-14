@@ -10,9 +10,9 @@ classDef iam fill:#e6e6e6,stroke:#8d8d8d,stroke-width:1px,color:#000;
 classDef local fill:#fff3c9,stroke:#cc9a00,stroke-width:1px,color:#000;
 
 
-%% ===================================================================
-%%                         TOP ROW (HORIZONTAL)
-%% ===================================================================
+%% ============================================================================================
+%%                                   TOP AREA (VARYANT B – SLIGHTLY ANGLED FLOW)
+%% ============================================================================================
 
 subgraph LOCAL["Local Machine"]
   L1["Excel Raw Files"]
@@ -27,10 +27,12 @@ subgraph S3RAW["S3 Raw Layer"]
 end
 class R1,R2,R3 s3;
 
+%% Local → Raw
 L1 --> R2
 L1 --> R3
 L2 --> R1
 
+%% Slight downward angle here
 Lambda1["Lambda Rename Script"]
 class Lambda1 glue;
 
@@ -38,20 +40,21 @@ R1 --> Lambda1
 Lambda1 --> R2
 Lambda1 --> R3
 
-%% IAM top row right side
+
+%% IAM slightly lower than top row
 subgraph IAM["IAM Roles"]
   IAM1["Glue Role"]
   IAM2["Redshift Role"]
   IAM3["QuickSight Role"]
 end
-class IAM,IAM1,IAM2,IAM3 iam;
+class IAM1,IAM2,IAM3 iam;
 
-Lambda1 --> IAM
+Lambda1 -.-> IAM
 
 
-%% ===================================================================
-%%                 BOTTOM ROW (DWH + BI, HORIZONTAL)
-%% ===================================================================
+%% ============================================================================================
+%%                                   MIDDLE (ETL)
+%% ============================================================================================
 
 subgraph GLUE["AWS Glue ETL"]
   G1["Process Imports (Excel→Parquet)"]
@@ -64,6 +67,11 @@ R2 --> G1
 R3 --> G2
 R1 --> G3
 
+
+%% ============================================================================================
+%%                                   BOTTOM ROW (DWH + BI)
+%% ============================================================================================
+
 subgraph S3PROC["S3 Processed (Parquet)"]
   P1["Imports Parquet"]
   P2["Exports Parquet"]
@@ -74,6 +82,7 @@ class P1,P2,P3 s3;
 G1 --> P1
 G2 --> P2
 G3 --> P3
+
 
 subgraph CRAWLERS["Glue Crawlers + Catalog"]
   C1["Trades Crawler"]
@@ -86,6 +95,7 @@ P1 --> C1 --> CAT
 P2 --> C1
 P3 --> C2 --> CAT
 
+
 subgraph STAGING["Redshift STAGING"]
   ST1["stg_trades"]
   ST2["stg_hts_category"]
@@ -94,6 +104,7 @@ class ST1,ST2 redshift;
 
 CAT --> ST1
 CAT --> ST2
+
 
 subgraph CORE["Redshift DIM & FACT"]
   D1["dim_country"]
@@ -107,6 +118,7 @@ class D1,D2,D3,D4,F1 redshift;
 ST1 --> F1
 ST1 --> D1
 ST2 --> D2
+
 
 subgraph BI["Analytics Layer"]
   Q1["QuickSight Dashboards"]
@@ -124,5 +136,4 @@ D3 --> Q1
 D3 --> PB1
 D4 --> Q1
 D4 --> PB1
-
 ```
